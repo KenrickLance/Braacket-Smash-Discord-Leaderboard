@@ -5,6 +5,7 @@ from datetime import datetime
 
 import requests
 import discord
+import pytz
 
 from bs4 import BeautifulSoup
 
@@ -14,6 +15,8 @@ from commands import get_leaderboards
 
 with open('./settings.json', 'r') as f:
     settings = json.load(f)
+
+timezone = pytz.timezone(settings['timezone'])
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -31,7 +34,7 @@ async def on_message(message):
         has_been_sent = False
         while True:
             out_str = get_leaderboards()
-            timestamp = datetime.now().strftime("%I:%M %p")
+            timestamp = datetime.now(timezone).strftime("%I:%M %p")
             out_str = f'```{settings["leaderboard_name"]}\n\n{out_str}\n\nLast updated: {timestamp}```'
             if has_been_sent == False:
                 has_been_sent = True
@@ -48,7 +51,7 @@ async def on_message(message):
         has_been_sent = False
         while True:
             out_str = get_leaderboards(rating_type='true')
-            timestamp = datetime.now().strftime("%I:%M %p")
+            timestamp = datetime.now(timezone).strftime("%I:%M %p")
             out_str = f'```{settings["leaderboard_name"]}\n\n{out_str}\n\nLast updated: {timestamp}```'
             if has_been_sent == False:
                 has_been_sent = True

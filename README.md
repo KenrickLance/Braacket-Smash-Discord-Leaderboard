@@ -16,10 +16,11 @@ Commands
 ## Usage
 
 Edit `settings.json` to set
-* `braacket url` (e.g. https://braacket.com/tournament/PHRL1/match)
+* `braacket url` (e.g. "https://braacket.com/tournament/PHRL1/match")
 * `discord api token`
 * `league name` (display name in the discord post)
 * `leaderboard_refresh_rate` (in seconds)
 * `true_leaderboard_refresh_rate` (in seconds)
+* `timezone` (TZ identifier e.g. "Asia/Manila")
 
 run `python main.py`
