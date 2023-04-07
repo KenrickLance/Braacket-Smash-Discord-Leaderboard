@@ -17,3 +17,5 @@ Edit `settings.json` to set
 * `braacket url`
 * `discord api token`
 * `league name`
+
+run `python main.py`
