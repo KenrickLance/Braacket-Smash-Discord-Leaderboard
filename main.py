@@ -38,7 +38,7 @@ async def on_message(message):
                 sent_message = await message.channel.send(out_str)
             else:
                 await sent_message.edit(content=out_str)
-            await asyncio.sleep(60 * 10)
+            await asyncio.sleep(settings['leaderboard_refresh_rate'])
 
             leaderboards_loop.setdefault(message.id, {'is_deleted': False})
             if leaderboards_loop[message.id]['is_deleted'] == True:
@@ -55,7 +55,7 @@ async def on_message(message):
                 sent_message = await message.channel.send(out_str)
             else:
                 await sent_message.edit(content=out_str)
-            await asyncio.sleep(60 * 60)
+            await asyncio.sleep(settings['true_leaderboard_refresh_rate'])
 
             leaderboards_loop.setdefault(message.id, {'is_deleted': False})
             if leaderboards_loop[message.id]['is_deleted'] == True:

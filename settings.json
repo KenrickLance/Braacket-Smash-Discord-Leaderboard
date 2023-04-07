@@ -1,5 +1,7 @@
 {
 	"braacket_url": "https://braacket.com/tournament/PHRL1/match",
 	"discord_api_token": "",
-	"leaderboard_name": "Ranked League"
+	"leaderboard_name": "Ranked League",
+	"leaderboard_refresh_rate": 600,
+	"true_leaderboard_refresh_rate": 3600,
 }
