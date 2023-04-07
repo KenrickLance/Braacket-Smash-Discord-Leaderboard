@@ -1,41 +1,67 @@
+import asyncio
+
+from datetime import datetime
+
 import requests
-import trueskill
+import discord
 
 from bs4 import BeautifulSoup
 
-resp = requests.get('https://braacket.com/tournament/SEARL1/match')
-soup = BeautifulSoup(resp.text, 'html.parser')
+import elo
 
-match_info = []
-players = {}
-matches = soup.find_all(class_='tournament_encounter-row')
+from commands import get_leaderboards
 
-for match in matches:
-    winner_html = match.find(class_='tournament_encounter_opponent winner')
-    loser_html = match.find(class_='tournament_encounter_opponent loser')
+intents = discord.Intents.default()
+intents.message_content = True
 
-    if loser_html is None or winner_html is None:
-        continue
+client = discord.Client(intents=intents)
 
-    winner_name = list(winner_html.stripped_strings)[0]
-    players.setdefault(winner_name, trueskill.Rating())
-    loser_name = list(loser_html.stripped_strings)[0]
-    players.setdefault(loser_name, trueskill.Rating())
-    match_id = list(match.find(class_='tournament_encounter-id').stripped_strings)[0]
+leaderboards_loop = {}
 
-    match_info.append({'match_id': int(match_id),
-                        'winner_name': winner_name,
-                        'loser_name': loser_name})
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
 
-match_info = sorted(match_info, key=lambda x: x['match_id'], reverse=True)
+    if message.content.lower().startswith('!leaderboards'):
+        has_been_sent = False
+        while True:
+            out_str = get_leaderboards()
+            timestamp = datetime.now().strftime("%I:%M %p")
+            out_str = f'```PHRL ELO Leaderboards\n\n{out_str}\n\nLast updated: {timestamp}```'
+            if has_been_sent == False:
+                has_been_sent = True
+                sent_message = await message.channel.send(out_str)
+            else:
+                await sent_message.edit(content=out_str)
+            await asyncio.sleep(60 * 10)
 
-for match in match_info:
-    winner_rating = players[match['winner_name']]
-    loser_rating = players[match['loser_name']]
-    winner_rating, loser_rating = trueskill.rate_1vs1(winner_rating, loser_rating)
-    players[match['winner_name']] = winner_rating
-    players[match['loser_name']] = loser_rating
+            leaderboards_loop.setdefault(message.id, {'is_deleted': False})
+            if leaderboards_loop[message.id]['is_deleted'] == True:
+                break
 
-sorted_players = {k: v for k,v in sorted(players.items(), key=lambda x: x[1].mu, reverse=True)}
-for k, v in sorted_players.items():
-    print(k, round(v.mu, 2), round(v.sigma, 2))
+    if message.content.lower().startswith('!true-leaderboards'):
+        has_been_sent = False
+        while True:
+            out_str = get_leaderboards(rating_type='true')
+            timestamp = datetime.now().strftime("%I:%M %p")
+            out_str = f'```PHRL ELO Leaderboards\n\n{out_str}\n\nLast updated: {timestamp}```'
+            if has_been_sent == False:
+                has_been_sent = True
+                sent_message = await message.channel.send(out_str)
+            else:
+                await sent_message.edit(content=out_str)
+            await asyncio.sleep(60 * 60)
+
+            leaderboards_loop.setdefault(message.id, {'is_deleted': False})
+            if leaderboards_loop[message.id]['is_deleted'] == True:
+                break
+
+@client.event
+async def on_message_delete(message):
+    try:
+        leaderboards_loop[message.id]['is_deleted'] = True
+    except KeyError:
+        pass
+
+client.run('MTA1Mzg4NDg5MzQzNzg5MDU5MQ.GC1RuE.kzLZAyRZbZxYxzfJ4xjhjLav7hMWzBrWS5XhH0')
