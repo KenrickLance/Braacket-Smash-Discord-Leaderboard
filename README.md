@@ -1,7 +1,7 @@
 # Braacket Smash Discord Leaderboard
 A discord bot to track smash games from braacket.com and compute ELO for a leaderboard
 
-![](https://imgur.com/a/7ZHOg2Q)
+![](https://i.imgur.com/VuSBy31.jpg)
 
 Commands
 1. `!leaderboards` - Automatically updating leaderboard of modified ELO (players need more games to show true ELO)
