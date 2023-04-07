@@ -1,3 +1,4 @@
+import json
 import asyncio
 
 from datetime import datetime
@@ -64,4 +65,7 @@ async def on_message_delete(message):
     except KeyError:
         pass
 
-client.run('MTA1Mzg4NDg5MzQzNzg5MDU5MQ.GC1RuE.kzLZAyRZbZxYxzfJ4xjhjLav7hMWzBrWS5XhH0')
+with open('./settings.json', 'r') as f:
+    settings = json.load(f)
+
+client.run(settings['discord_api_token'])
