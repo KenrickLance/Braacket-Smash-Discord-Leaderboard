@@ -3,5 +3,5 @@
 	"discord_api_token": "",
 	"leaderboard_name": "Ranked League",
 	"leaderboard_refresh_rate": 600,
-	"true_leaderboard_refresh_rate": 3600,
+	"true_leaderboard_refresh_rate": 3600
 }
