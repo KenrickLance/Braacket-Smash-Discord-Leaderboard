@@ -32,7 +32,7 @@ async def on_message(message):
         while True:
             out_str = get_leaderboards()
             timestamp = datetime.now().strftime("%I:%M %p")
-            out_str = f'```{settings["leaderboard_name"]} ELO Leaderboards\n\n{out_str}\n\nLast updated: {timestamp}```'
+            out_str = f'```{settings["leaderboard_name"]}\n\n{out_str}\n\nLast updated: {timestamp}```'
             if has_been_sent == False:
                 has_been_sent = True
                 sent_message = await message.channel.send(out_str)
@@ -49,7 +49,7 @@ async def on_message(message):
         while True:
             out_str = get_leaderboards(rating_type='true')
             timestamp = datetime.now().strftime("%I:%M %p")
-            out_str = f'```{settings["leaderboard_name"]} ELO Leaderboards\n\n{out_str}\n\nLast updated: {timestamp}```'
+            out_str = f'```{settings["leaderboard_name"]}\n\n{out_str}\n\nLast updated: {timestamp}```'
             if has_been_sent == False:
                 has_been_sent = True
                 sent_message = await message.channel.send(out_str)

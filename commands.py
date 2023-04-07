@@ -24,6 +24,8 @@ def get_leaderboards(rating_type='display'):
     match_info = []
     players = {}
     matches = soup.find_all(class_='tournament_encounter-row')
+    if not matches:
+        return "No matches recorded"
 
     for match in matches:
         winner_html = match.find(class_='tournament_encounter_opponent winner')
