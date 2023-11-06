@@ -3,13 +3,8 @@ import asyncio
 
 from datetime import datetime
 
-import requests
 import discord
 import pytz
-
-from bs4 import BeautifulSoup
-
-import elo
 
 from commands import get_leaderboards
 
@@ -47,7 +42,7 @@ async def on_message(message):
             if leaderboards_loop[message.id]['is_deleted'] == True:
                 break
 
-    if message.content.lower().startswith('!true-leaderboards'):
+    if message.content.lower().startswith('!leaderboards-true'):
         has_been_sent = False
         while True:
             out_str = get_leaderboards(rating_type='true')

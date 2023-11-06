@@ -1,11 +1,10 @@
 import json
 
 import requests
-import discord
 
 from bs4 import BeautifulSoup
 
-import elo
+import rating
 
 with open('./settings.json', 'r') as f:
     settings = json.load(f)
@@ -35,9 +34,9 @@ def get_leaderboards(rating_type='display'):
             continue
 
         winner_name = list(winner_html.stripped_strings)[0]
-        players.setdefault(winner_name, elo.Player(winner_name))
+        players.setdefault(winner_name, rating.Player(winner_name))
         loser_name = list(loser_html.stripped_strings)[0]
-        players.setdefault(loser_name, elo.Player(loser_name))
+        players.setdefault(loser_name, rating.Player(loser_name))
         match_id = list(match.find(class_='tournament_encounter-id').stripped_strings)[0]
 
         match_info.append({'match_id': int(match_id),
@@ -47,18 +46,26 @@ def get_leaderboards(rating_type='display'):
     match_info = sorted(match_info, key=lambda x: x['match_id'])
 
     for match in match_info:
-        elo.rate_1vs1(players[match['winner_name']], players[match['loser_name']])
+        players[match['winner_name']].won_against(players[match['loser_name']])
     
     out_str = ''
+
+    if not players:
+        return 'No players ranked'
     
+    # Filter players with less than 5 wins
+    players = {k: v for k, v in players.items() if v.num_wins >= 5}
+
     if rating_type == 'display':
         sorted_players = {k: v for k,v in sorted(players.items(), key=lambda x: x[1].display_rating, reverse=True)}
 
-        longest_name_offset = max([len(k) for k in players.keys()])
+        longest_name_offset = max([len(k)for k, v in players.items()])
         counter = 0
+        out_str += f'{"RANK":<4}  {"NAME":<{longest_name_offset}}  {"RATING":<6}  {"DIVISION":<10}\n'
+        out_str += '-'*(4+4+10+longest_name_offset+6) + '\n'
         for k, v in sorted_players.items():
             counter += 1
-            out_str += f'{counter:>2} {k:>{longest_name_offset}}: {v.display_rating:>4}\n'
+            out_str += f'{counter:>4}  {k:<{longest_name_offset}}  {v.display_rating:<6}  {v.display_rank:<10}\n'
     elif rating_type == 'true':
         sorted_players = {k: v for k,v in sorted(players.items(), key=lambda x: x[1].rating, reverse=True)}
 
@@ -66,6 +73,6 @@ def get_leaderboards(rating_type='display'):
         counter = 0
         for k, v in sorted_players.items():
             counter += 1
-            out_str += f'{counter:>2} {k:>{longest_name_offset}}: {v.rating:>4}\n'
+            out_str += f'{counter:>2} {k:>{longest_name_offset}}: {v.rating}\n'
 
     return out_str
