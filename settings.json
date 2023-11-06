@@ -1,8 +1,8 @@
 {
-	"braacket_url": "https://braacket.com/tournament/ARS1/match",
-	"discord_api_token": "MTE3MDMzNTc0NTQ4ODE5OTc3MQ.GOAfX8.QcaBQ08YfkM32sKorrkxNqRAcA3saI5B0UfU0o",
-	"leaderboard_name": "Asia Ranked Season 1",
-	"leaderboard_refresh_rate": 600,
-	"true_leaderboard_refresh_rate": 3600,
-	"timezone": "Asia/Manila"
+	"braacket_url": "",
+	"discord_api_token": "",
+	"leaderboard_name": "",
+	"leaderboard_refresh_rate": ,
+	"true_leaderboard_refresh_rate": ,
+	"timezone": ""
 }
